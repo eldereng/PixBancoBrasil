@@ -17,6 +17,8 @@
 	- > developer_application_key = app_key_dev
 
 	- > Basic = basic_token
+	
+	- > Get these keys on https://app.developers.bb.com.br
 
 - > To test, run
 
