@@ -26,7 +26,7 @@
 
 - > Out put Example
 
-	-> PixMakeCob
+	-> Return of "PixMakeCob" (cria cobrança)
 
 ```javascript
 {
