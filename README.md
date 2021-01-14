@@ -27,7 +27,8 @@
 - > Out put Example
 
 	-> PixMakeCob
-```json
+
+```yaml
 {
 	'status': 'ATIVA',
 	'calendario': {
