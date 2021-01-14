@@ -51,3 +51,5 @@
 ```
 
 	- > QrCode Image
+
+	![alt text](image/58354.png "QrCode")
