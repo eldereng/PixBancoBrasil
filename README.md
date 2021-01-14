@@ -1,4 +1,4 @@
-- > On first time
+- > On the first time
 
 	- > python -m venv .env
 
