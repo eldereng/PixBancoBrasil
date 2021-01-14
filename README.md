@@ -52,5 +52,5 @@
 
 	- > QrCode Image
 
-	![image](image/58354.png)
+![image](image/58354.png)
 
