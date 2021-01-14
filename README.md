@@ -28,7 +28,7 @@
 
 	-> PixMakeCob
 
-```yaml
+```json
 {
 'status': 'ATIVA',
 'calendario': {
@@ -49,3 +49,5 @@
 'solicitacaoPagador': 'asdasdasds.'
 }
 ```
+
+	- > QrCode Image
