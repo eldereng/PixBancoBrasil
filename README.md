@@ -1,6 +1,10 @@
 - > On the first time
 
+	- > conda deactivate & deactivate
+
 	- > python -m venv .env
+
+	- > .env\Scripts\activate.bat
 
 	- > Install packages
 
