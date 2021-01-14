@@ -28,7 +28,7 @@
 
 	-> PixMakeCob
 
-```json
+```javascript
 {
 'status': 'ATIVA',
 'calendario': {
