@@ -24,7 +24,7 @@
 
 	- > python RunBBPix-Example.py
 
-- > Out put Example
+- > Out put sample
 
 	-> Return of "PixMakeCob" (cria cobrança)
 
