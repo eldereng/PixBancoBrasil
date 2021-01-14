@@ -24,7 +24,7 @@
 
 	- > python RunBBPix-Example.py
 
-- > Out put sample
+- > Output sample (ambiente de homologação do BB)
 
 	-> Return of "PixMakeCob" (cria cobrança)
 
