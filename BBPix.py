@@ -43,7 +43,7 @@ class PixBBOperations(object):
         while self.logged:
             time.sleep(int(self.expires_in * 0.8))
             self.Login()
-        raise exception("Não foi possível pegar 1 novo token. Saindo...")
+        raise Exception("Não foi possível pegar 1 novo token. Saindo...")
 
     # autenticar no sistema BB
     def Login(self):
@@ -94,7 +94,7 @@ class PixBBOperations(object):
         localdata = {
             "inicio": "{}T00:00:00Z".format(dateini),
             "fim": "{}T00:00:00Z".format(dataend),
-            "txId": txid,
+            "txid": txid,
         }
         parm = dict(localdata, **self.params)
         code, json = PixBBOperations.RunRequest("GET", url, self.headers, parm)
@@ -110,12 +110,12 @@ class PixBBOperations(object):
     ):
         super().__init__()
         if not app_key_dev:
-            raise exception(
+            raise Exception(
                 "informe a chave \"developer_application_key\" do APP.")
         self.app_key_dev = app_key_dev
 
         if not basic_token or "Basic " not in basic_token:  # example: "Basic AzdE..."
-            raise exception(
+            raise Exception(
                 "informe a chave \"basic\" do APP para autenticar no serviço do BB."
             )
         self.basic_token = basic_token
@@ -143,7 +143,7 @@ class PixBBOperations(object):
         self.headers = {'Content-Type': "application/x-www-form-urlencoded"}
         self.logged = False
         if not self.Login():
-            raise exception("Não foi possível logar.")
+            raise Exception("Não foi possível logar.")
         else:  # Agenda para pegar um novo token qdo tiver perto de vencer
             th = threading.Thread(target=self.refresh_token)
             th.daemon = True
