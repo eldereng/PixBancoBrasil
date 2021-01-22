@@ -1,5 +1,5 @@
 import re, uuid, qrcode
-import threading, time
+import threading, time, base64
 from hashlib import md5
 from json import dumps
 from requests import Request, Session
@@ -11,10 +11,16 @@ class PixBBOperations(object):
     ENVIRONMENT = ["hm.", ""]  # Homologação / Produção ..
     FULL_SCOPE = " ".join(["cob.write", "cob.read", "pix.read"])
     PIX_KEY_HM = [  # Chaves PIX de Homologação fornecidas pelo BB
-        "7f6844d0-de89-47e5-9ef7-e0a35a681615",
-        "3d94a38b-f344-460e-b6c9-489469b2fb03",
-        "d14d32de-b3b9-4c31-9f89-8df2cec92c50"
+        "7f6844d0-de89-47e5-9ef7-e0a35a681615", "3d94a38b-f344-460e-b6c9-489469b2fb03", "d14d32de-b3b9-4c31-9f89-8df2cec92c50"
     ]
+
+    # Authorization = Basic encodeBase64(client_id:client_secret)
+    def CreateBaseFromKeys(client_id, client_secret):
+        message = client_id + ":" + client_secret
+        message_bytes = message.encode('ascii')
+        base64_bytes = base64.b64encode(message_bytes)
+        AuthorizationBasic = base64_bytes.decode('ascii')
+        return "Basic " + AuthorizationBasic
 
     #make QrCode image
     def MakeQrCode(content, file=None):
@@ -29,12 +35,7 @@ class PixBBOperations(object):
 
     # executa requisições HTTP
     def RunRequest(type, url, headers, params, data={}, json={}):
-        pix_request = Request(type,
-                              url,
-                              headers=headers,
-                              params=params,
-                              data=data,
-                              json=json).prepare()
+        pix_request = Request(type, url, headers=headers, params=params, data=data, json=json).prepare()
         response = (Session()).send(pix_request, verify=False)
         return response.status_code, response.json()
 
@@ -50,8 +51,7 @@ class PixBBOperations(object):
         url = self.LoginRootURL + "/oauth/token"
         self.headers['Authorization'] = self.basic_token
         data = {'grant_type': 'client_credentials', "scope": self.scope}
-        code, json = PixBBOperations.RunRequest("POST", url, self.headers,
-                                                self.params, data, {})
+        code, json = PixBBOperations.RunRequest("POST", url, self.headers, self.params, data, {})
         self.logged = False
         if code in [200]:
             self.logged = True
@@ -59,8 +59,7 @@ class PixBBOperations(object):
             self.token_type = json["token_type"]
             self.expires_in = json["expires_in"]
             self.headers["accept"] = "application/json"
-            self.headers["Authorization"] = "{} {}".format(
-                self.token_type, self.access_token)
+            self.headers["Authorization"] = "{} {}".format(self.token_type, self.access_token)
         return code in [200]
 
     # cria cobrança.
@@ -74,8 +73,7 @@ class PixBBOperations(object):
         # Gera uma cobrança PIX e retorna um Json com campo de dados p/ Gerar o QRCode
         url = "{}/pix/v1/cobqrcode/{}".format(self.RootURL, txid)
         jsondata["chave"] = self.pix_key
-        code, json = PixBBOperations.RunRequest("PUT", url, self.headers,
-                                                self.params, {}, jsondata)
+        code, json = PixBBOperations.RunRequest("PUT", url, self.headers, self.params, {}, jsondata)
         if code in [200] and makeqrcodeimage and "textoImagemQRcode" in json:
             fqrcode = PixBBOperations.MakeQrCode(json["textoImagemQRcode"])
             return code, json, txid, fqrcode
@@ -110,14 +108,12 @@ class PixBBOperations(object):
     ):
         super().__init__()
         if not app_key_dev:
-            raise Exception(
-                "informe a chave \"developer_application_key\" do APP.")
+            raise Exception("informe a chave \"developer_application_key\" do APP.")
         self.app_key_dev = app_key_dev
 
+        # Para gerar o basic_token usando client_id e client_secret, use o "CreateBaseFromKeys"
         if not basic_token or "Basic " not in basic_token:  # example: "Basic AzdE..."
-            raise Exception(
-                "informe a chave \"basic\" do APP para autenticar no serviço do BB."
-            )
+            raise Exception("informe a chave \"basic\" do APP para autenticar no serviço do BB.")
         self.basic_token = basic_token
 
         environment = env
